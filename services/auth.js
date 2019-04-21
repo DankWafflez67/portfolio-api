@@ -2,10 +2,13 @@ const User = require('../models/User')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const config = require('../config')
+
 const saltRounds = 10
+const certPrivateKey = fs.readFileSync(config.CERT_PRIVATE_KEY_PATH);
+const certPublicKey = fs.readFileSync(config.CERT_PUBLIC_KEY_PATH);
 
 const verifyToken = token => new Promise((resolve, reject) => {
-  jwt.verify(token, config.JWT_PRIVATE_KEY, function(err, decoded) {
+  jwt.verify(token, certPublicKey, function(err, decoded) {
     if(err) {
       return reject(err)
     }
@@ -16,7 +19,7 @@ const verifyToken = token => new Promise((resolve, reject) => {
 function createToken(payload, options)
 {
   return new Promise((resolve, reject) => {
-    jwt.sign(payload, config.JWT_PRIVATE_KEY, options, (err, token) => {
+    jwt.sign(payload, certPrivateKey, options, (err, token) => {
       if(token){
           resolve(token)
       } else {
