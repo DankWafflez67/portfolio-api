@@ -1,9 +1,13 @@
 const mongoose = require('mongoose')
+const slug = require('mongoose-slug-generator')
 const timestamp =  require('mongoose-timestamp')
 const mongoosePaginate = require('mongoose-paginate')
 
+mongoose.plugin(slug)
+
 const PostSchema = new mongoose.Schema({
   title: String,
+  slug: { type: String, slug: "title", unique: true },
   body: String,
   author: mongoose.Schema.Types.ObjectId,
   categories: Array,

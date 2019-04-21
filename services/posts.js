@@ -1,3 +1,4 @@
+const slugify = require('slugify')
 const Post = require('../models/Post')
 
 const getPosts = (requestQuery) => new Promise((resolve, reject) => {
