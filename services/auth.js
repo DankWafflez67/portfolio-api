@@ -2,6 +2,7 @@ const User = require('../models/User')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const config = require('../config')
+const fs = require('fs')
 
 const saltRounds = 10
 const certPrivateKey = fs.readFileSync(config.CERT_PRIVATE_KEY_PATH);
@@ -35,7 +36,7 @@ const refreshToken = user => new Promise((resolve, reject) => {
     user_id: user._id,
     email: user.email
   }
-  createToken(payload, { expiresIn: '2h' }).then((token) => {
+  createToken(payload, { expiresIn: '2h', algorithm: 'RS256' }).then((token) => {
     const response = {
       status: 200,
       data: {
@@ -66,7 +67,7 @@ const loginUser = requestBody => new Promise((resolve, reject) => {
             user_id: user._id,
             email: user.email
           }
-          createToken(payload, { expiresIn: '2h' }).then((token) => {
+          createToken(payload, { expiresIn: '2h', algorithm: 'RS256' }).then((token) => {
             const response = {
               status: 200,
               data: {
