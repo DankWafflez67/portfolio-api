@@ -98,9 +98,9 @@ const createPost = (requestBody, authorId) => new Promise((resolve, reject) => {
   })
 })
 
-const updatePost = (postId, requestBody) => new Promise((resolve, reject) => {
+const updatePost = (postSlug, requestBody) => new Promise((resolve, reject) => {
   const { title, body, categories } = requestBody
-  Post.findOneAndUpdate( { _id: postId}, {title, body, categories}, { new: true }).then((updatedPost) => {
+  Post.findOneAndUpdate( { slug: postSlug }, {title, body, categories}, { new: true }).then((updatedPost) => {
     if(updatedPost){
       const response = {
         status: 200,
@@ -132,8 +132,8 @@ const updatePost = (postId, requestBody) => new Promise((resolve, reject) => {
   })
 })
 
-const removePost = (postId) => new Promise((resolve, reject) => {
-  Post.findOneAndDelete({ _id: postId }).then((post) => {
+const removePost = (postSlug) => new Promise((resolve, reject) => {
+  Post.findOneAndDelete({ slug: postSlug }).then((post) => {
     if(post) {
       const response = {
         status: 200,
