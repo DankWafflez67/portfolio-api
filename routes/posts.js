@@ -11,8 +11,8 @@ module.exports = server => {
       res.status(response.status).json(response.data)
     })
   })
-  server.get('/post/:id', (req, res, next) => {
-    posts.getPost({ _id: req.params.id }).then((response) => {
+  server.get('/post/:slug', (req, res, next) => {
+    posts.getPost({ slug: req.params.slug }).then((response) => {
       res.status(response.status).json(response.data)
     }).catch((response) => {
       console.log(response)
@@ -34,7 +34,7 @@ module.exports = server => {
       res.status(response.status).json(response.data)
     })
   })
-  server.put('/post/:id', [
+  server.put('/post/:slug', [
     check('title', 'A title is required.').isLength({ min: 1 }),
     check('body', 'The body must be a minimum of 5 characters.').isLength({ min: 5 }),
     check('categories', 'At least one category must be selected.').isLength({ min: 1 }),
@@ -42,15 +42,15 @@ module.exports = server => {
   ], (req, res, next) => {
     const validationErrors = validationResult(req)
     if (!validationErrors.isEmpty()) return res.status(422).json({ errors: validationErrors.array() })
-    posts.updatePost(req.params.id, req.body).then((response) => {
+    posts.updatePost(req.params.slug, req.body).then((response) => {
       res.status(response.status).json(response.data)
     }).catch((response) => {
       console.log(response)
       res.status(response.status).json(response.data)
     })
   })
-  server.delete('/post/:id', [ authenticate ], async (req, res, next) => {
-    posts.removePost(req.params.id).then((response) => {
+  server.delete('/post/:slug', [ authenticate ], async (req, res, next) => {
+    posts.removePost(req.params.slug).then((response) => {
       res.status(response.status).json(response.data)
     }).catch((response) => {
       console.log(response)

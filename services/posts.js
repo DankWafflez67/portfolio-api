@@ -18,8 +18,8 @@ const getPosts = (requestQuery) => new Promise((resolve, reject) => {
     const response = {
       status: 200,
       data: {
-        message: 'Hello world!',
-        posts
+        message: 'Success!',
+        posts: posts.docs
       }
     }
     resolve(response)
