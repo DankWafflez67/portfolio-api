@@ -4,8 +4,8 @@ const bcrypt = require('bcrypt')
 const fs = require('fs')
 
 const saltRounds = 10
-const certPrivateKey = '123'; //fs.readFileSync(process.env.CERT_PRIVATE_KEY_PATH);
-const certPublicKey = '123'; //fs.readFileSync(process.env.CERT_PUBLIC_KEY_PATH);
+const certPrivateKey = fs.readFileSync(process.env.CERT_PRIVATE_KEY_PATH);
+const certPublicKey = fs.readFileSync(process.env.CERT_PUBLIC_KEY_PATH);
 
 const verifyToken = token => new Promise((resolve, reject) => {
   jwt.verify(token, certPublicKey, function(err, decoded) {
