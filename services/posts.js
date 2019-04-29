@@ -186,7 +186,7 @@ const formatPost = async (postData) => {
     const categoryIds = postData.categories.map(id => mongoose.Types.ObjectId(id));
     
     // Get names of categories instead of id's
-    const categories = await Category.find().in(categoryIds).exec();
+    const categories = await Category.find().where().in(categoryIds).exec();
 
     // Get the author of the post
     const author = await User.findById(postData.author).exec();
