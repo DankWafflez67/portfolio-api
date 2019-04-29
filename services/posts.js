@@ -197,8 +197,8 @@ const formatPost = async (postData) => {
       body: postData.body,
       categories: categories.map(c => c.name), // convert our array of objects into a array of names
       author: {
-        email: user.email,
-        name: user.name
+        email: author.email,
+        name: author.name
       },
       createdAt: moment(postData.createdAt).fromNow(),
       updatedAt: moment(postData.createdAt).fromNow()
