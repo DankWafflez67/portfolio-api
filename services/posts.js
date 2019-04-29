@@ -1,6 +1,7 @@
 const Post = require('../models/Post')
 const User = require('../models/User')
 const Category = require('../models/Category')
+const mongoose = require('mongoose');
 const moment = require('moment')
 
 const getPosts = (requestQuery) => new Promise((resolve, reject) => {
@@ -179,40 +180,34 @@ const removePost = (postSlug) => new Promise((resolve, reject) => {
   })
 })
 
-const formatPost = (postData) => new Promise((resolve, reject) => {
-  //Get names of categories instead of id's
-  const categories = []
-  postData.categories.forEach((catId) => {
-    Category.findById(catId).then((category) => {
-      if(category) categories.push(category.name)
-    }).catch((err) => {
-      console.log(err)
-    })
-  })
-  //Pull in author's information.
-  console.log(categories)
-  Promise.all(categories).then((categories) => {
-    console.log(categories)
-    User.findById(postData.author).then((user) => {
-      const response = {
-        slug: postData.slug,
-        title: postData.title,
-        body: postData.body,
-        categories: categories,
-        author: {
-          email: user.email,
-          name: user.name
-        },
-        createdAt: moment(postData.createdAt).fromNow(),
-        updatedAt: moment(postData.createdAt).fromNow()
-      }
-      resolve(response)
-    }).catch((err) => {
-      const response = error500(err)
-      reject(response)
-    })
-  })
-})
+const formatPost = async (postData) => {
+  try {
+    // Convert the category id's into "mongoose" id's
+    const categoryIds = postData.categories.map(id => mongoose.Types.ObjectId(id));
+    
+    // Get names of categories instead of id's
+    const categories = await Category.find().in(categoryIds).exec();
+
+    // Get the author of the post
+    const author = await User.findById(postData.author).exec();
+    
+    return  {
+      slug: postData.slug,
+      title: postData.title,
+      body: postData.body,
+      categories: categories.map(c => c.name), // convert our array of objects into a array of names
+      author: {
+        email: author.email,
+        name: author.name
+      },
+      createdAt: moment(postData.createdAt).fromNow(),
+      updatedAt: moment(postData.createdAt).fromNow()
+    };
+  } catch(err){
+    // Return the error message, not 100% sure the best way to handle this.
+    return error500(err);
+  }
+};
 
 const error500 = (error = '') => {
   console.log(error)
