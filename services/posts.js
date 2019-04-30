@@ -21,19 +21,21 @@ const getPosts = (requestQuery) => new Promise((resolve, reject) => {
   ).then((dbPosts) => {
     const posts = [];
     dbPosts.docs.forEach((post) => {
-      formatPost(post).then((formatedPost) => {
-        posts.push(formatPost)
-      });
+      posts.push(formatPost(post))
     })
-    const response = {
-      status: 200,
-      data: {
-        message: 'Success!',
-        totalPosts: dbPosts.count,
-        posts: posts
+    Promise.all(posts).then((data) => {
+      const response = {
+        status: 200,
+        data: {
+          message: 'Success!',
+          totalPosts: dbPosts.count,
+          posts: data
+        }
       }
-    }
-    resolve(response)
+      resolve(response)
+    }).catch((err) => {
+      reject(error500(err))
+    })
   }).catch((err) => {
     console.log(err)
     const response = {
