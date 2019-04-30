@@ -21,7 +21,9 @@ const getPosts = (requestQuery) => new Promise((resolve, reject) => {
   ).then((dbPosts) => {
     const posts = [];
     dbPosts.docs.forEach((post) => {
-      posts.push(formatPost(post))
+      formatPost(post).then((formatedPost) => {
+        posts.push(formatPost)
+      });
     })
     const response = {
       status: 200,
@@ -196,7 +198,7 @@ const formatPost = async (postData) => {
     // Get the author of the post
     const author = await User.findById(postData.author).exec();
     
-    return  {
+    return {
       slug: postData.slug,
       title: postData.title,
       body: postData.body,
