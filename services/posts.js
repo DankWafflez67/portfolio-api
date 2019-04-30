@@ -18,12 +18,17 @@ const getPosts = (requestQuery) => new Promise((resolve, reject) => {
       page: requestQuery.page || 1,
       limit: requestQuery.limit
     }
-  ).then((posts) => {
+  ).then((dbPosts) => {
+    const posts = [];
+    dbPosts.docs.forEach((post) => {
+      posts.push(formatPost(post))
+    })
     const response = {
       status: 200,
       data: {
         message: 'Success!',
-        posts: posts.docs
+        totalPosts: dbPosts.count,
+        posts: posts
       }
     }
     resolve(response)
