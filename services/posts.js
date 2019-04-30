@@ -28,7 +28,7 @@ const getPosts = (requestQuery) => new Promise((resolve, reject) => {
         status: 200,
         data: {
           message: 'Success!',
-          totalPosts: dbPosts.count,
+          totalPosts: dbPosts.total,
           posts: data
         }
       }
